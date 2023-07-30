@@ -40,8 +40,6 @@ public class GoogleTranslateWithoutApiKey extends BaseCachedTranslate {
     protected static final String[] GT_URLS = {
         "https://translate.googleapis.com/translate_a/t?client=gtx",
         "https://translate.google.com/translate_a/t?client=dict-chrome-ex" };
-//     protected static final String MARK_BEG = "{\"trans\":\"";
-//     protected static final String MARK_END = "\",\"orig\":\"";
     protected static final Pattern RE_UNICODE = Pattern.compile("\\\\u([0-9A-Fa-f]{4})");
     protected static final Pattern RE_HTML = Pattern.compile("&#([0-9]+);");
     private static String[] USER_AGENTS = {
@@ -199,15 +197,7 @@ public class GoogleTranslateWithoutApiKey extends BaseCachedTranslate {
         v = v.substring(2,v.length());
         v = v.substring(0,v.length()-2);
         items.add(v);
-//         int beg = -1, end = -1;
-//         do {
-//             beg = StringUtils.indexOf(v, MARK_BEG, end) + MARK_BEG.length();
-//             end = StringUtils.indexOf(v, MARK_END, beg);
-//             logger.debug("beg={}, end={}", beg, end);
-//             String tr = v.substring(beg, end);
-//             items.add(tr);
-//         } while (beg != StringUtils.lastIndexOf(v, MARK_BEG) + MARK_BEG.length());
-        
+	    
         List<String> resultItems = new ArrayList<>();
         for (String tr : items) {
             String newTr = tr;
