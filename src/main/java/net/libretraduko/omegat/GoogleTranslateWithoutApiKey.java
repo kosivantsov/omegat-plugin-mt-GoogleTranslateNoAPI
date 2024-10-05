@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
+// import org.apache.commons.lang.StringUtils;
 import org.omegat.core.Core;
 import org.omegat.core.CoreEvents;
 import org.omegat.core.events.IApplicationEventListener;
@@ -32,14 +32,17 @@ import org.omegat.core.machinetranslators.BaseCachedTranslate;
 import org.omegat.core.machinetranslators.MachineTranslators;
 import org.omegat.util.Language;
 import org.omegat.util.PatternConsts;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.omegat.util.Log;
+// import org.slf4j.Logger;
+// import org.slf4j.LoggerFactory;
 
 public class GoogleTranslateWithoutApiKey extends BaseCachedTranslate {
-    private static final Logger logger = LoggerFactory.getLogger(GoogleTranslateWithoutApiKey.class);
+    // private static final Logger logger = LoggerFactory.getLogger(GoogleTranslateWithoutApiKey.class);
     protected static final String[] GT_URLS = {
         "https://translate.googleapis.com/translate_a/t?client=gtx",
         "https://translate.google.com/translate_a/t?client=dict-chrome-ex" };
+//     protected static final String MARK_BEG = "{\"trans\":\"";
+//     protected static final String MARK_END = "\",\"orig\":\"";
     protected static final Pattern RE_UNICODE = Pattern.compile("\\\\u([0-9A-Fa-f]{4})");
     protected static final Pattern RE_HTML = Pattern.compile("&#([0-9]+);");
     private static String[] USER_AGENTS = {
@@ -132,7 +135,7 @@ public class GoogleTranslateWithoutApiKey extends BaseCachedTranslate {
             return prev;
         }
 	
-        logger.debug("trText={}", trText);
+        Log.logErrorRB("trText={}", trText);
         String targetLang = tLang.getLanguageCode();
         // Differentiate in target between simplified and traditional Chinese
         if ((tLang.getLanguage().compareToIgnoreCase("zh-cn") == 0)
@@ -152,10 +155,10 @@ public class GoogleTranslateWithoutApiKey extends BaseCachedTranslate {
         while (failures.size() != GT_URLS.length && answer == null) {
             String url = urls.get(rnd.nextInt(urls.size()));
             try {
-                logger.debug("url={}", url);
+                Log.logErrorRB("url={}", url);
                 answer = getURLasByteArray(url, params, headers);
             } catch (IOException e) {
-                logger.info("Exception {} with url={}", e.getMessage(), url);
+                Log.logErrorRB("Exception {} with url={}", e.getMessage(), url);
                 failures.add(url);
                 urls.remove(url);
             }
@@ -171,7 +174,7 @@ public class GoogleTranslateWithoutApiKey extends BaseCachedTranslate {
             outStr.append(line);
         }
         String v = outStr.toString();
-        logger.debug("outStr={}", v);
+        Log.logErrorRB("outStr={}", v);
         while (true) {
             Matcher m = RE_UNICODE.matcher(v);
             if (!m.find()) {
@@ -197,7 +200,15 @@ public class GoogleTranslateWithoutApiKey extends BaseCachedTranslate {
         v = v.substring(2,v.length());
         v = v.substring(0,v.length()-2);
         items.add(v);
-	    
+//         int beg = -1, end = -1;
+//         do {
+//             beg = StringUtils.indexOf(v, MARK_BEG, end) + MARK_BEG.length();
+//             end = StringUtils.indexOf(v, MARK_END, beg);
+//             logger.debug("beg={}, end={}", beg, end);
+//             String tr = v.substring(beg, end);
+//             items.add(tr);
+//         } while (beg != StringUtils.lastIndexOf(v, MARK_BEG) + MARK_BEG.length());
+        
         List<String> resultItems = new ArrayList<>();
         for (String tr : items) {
             String newTr = tr;
@@ -220,7 +231,7 @@ public class GoogleTranslateWithoutApiKey extends BaseCachedTranslate {
             }
             resultItems.add(newTr);
         }
-        String result = StringUtils.join(resultItems, "");
+        String result = String.join("", resultItems);
         putToCache(sLang, tLang, trText, result);
         return result;
     }

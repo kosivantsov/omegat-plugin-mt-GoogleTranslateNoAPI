@@ -13,9 +13,11 @@ repositories {
 version = "1.1.2"
 
 omegat {
-    version = "5.7.0"
+    version = "6.0.0"
     pluginClass = "net.libretraduko.omegat.GoogleTranslateWithoutApiKey"
 }
+
+
 
 dependencies {
     implementation("commons-io:commons-io:2.7")
